@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
-import { FormBuilder, FormGroup, Validators, Form } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //import { from } from 'rxjs';
 import { CategoriasProvider } from './../../../providers/categorias/categorias';
 
@@ -22,19 +22,25 @@ title:string;
 categoria:any;
 form: FormGroup;
 
+
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private categoriasProvider: CategoriasProvider, private FormBuilder: FormBuilder, private toast: ToastController) {
     this.categoria = this.navParams.data.categoriakey || {}
     this.SetupPageTitle();
     this.createForm();
+
+    const subscribe = this.categoriasProvider.get(this.navParams.data.categoriakey).subscribe(categoriaData => {
+      subscribe.unsubscribe();
+      this.categoria = categoriaData;
+     // console.log(this.categoria);
+     this.createForm();
+    })
   }
 
-  //ionViewDidLoad() {
-    //console.log('ionViewDidLoad CategoriasEditaPage');
-//}
 
 private SetupPageTitle(){
-  if(this.navParams.data.categoriaKey){
-    this.title="Alterando Categoria"
+  if(this.navParams.data.categoriakey){
+    this.title="Alterando Categoria";
 
   } else{
     this.title="Novo Categoria";
