@@ -1,15 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-//import { from } from 'rxjs';
 import { CategoriasProvider } from './../../../providers/categorias/categorias';
-
-/**
- * Generated class for the CategoriasEditaPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 
 @IonicPage()
