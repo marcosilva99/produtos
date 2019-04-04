@@ -60,6 +60,15 @@ categoriaItem:any;
     })
   }
 
+  onSubmit(){
+    if (this.formProdutos.valid) {
+      this.produtosProvider.save(this.formProdutos.value, this.file);
+      //this.toast.show('Produtos salvo com sucesso');
+      this.toast.create({ message: 'Categoria salva com sucesso', duration: 3000}).present();
+      this.navCtrl.pop();
+    }
+  }
+
     // consulta a categoria escolhida pela key e guarda o nome
     getCategorias() {
       const subscribe = this.categoriasProvider.get(this.formProdutos.value.categoryKey).subscribe((categoriasData: any) => {
