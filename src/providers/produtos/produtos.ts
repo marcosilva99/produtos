@@ -12,6 +12,16 @@ export class ProdutosProvider {
   // AngularFireDatabase não dá suporte para o Firebase Storage
   constructor(private fb: FirebaseApp, private db: AngularFireDatabase) {}
 
+  // consulta todos os produtos, e ordena pelo nome da Categoria
+  getAll() {
+    return this.db.list(this.PATH, ref => ref.orderByChild('categoryName'))
+      .snapshotChanges()
+      .map(changes => {
+        return changes.map(m => ({ key: m.key, data: m.payload.val() }));
+      });
+  }
+
+
   // file é o arquivo passando por parâmetro
   save(item: any, file: File) {
     const product = {
@@ -39,6 +49,61 @@ export class ProdutosProvider {
       });
     }
   }
+
+
+  uploadImg(key: string, file: File) {
+    const storageRef = this.fb.storage().ref();              // put(file) adicionando o arquivo
+    const uploadTask = storageRef.child(this.PATH_IMG + key).put(file);
+                                              // quando o status mudar... implementar 3 métodos
+                                              // snapshot, error e quando tiver finalizado
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+      (snapshot: any) => {
+        // upload em andamento
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      },
+      (error) => {
+        // upload falhou
+        console.log(error);
+      },
+      () => {
+        // upload com sucesso, update estou usando somente uma parte do registro
+                                                          //uploadTask pego a propriedade downloadURL que é caminho do storage gravado da imagem
+        this.db.object(this.PATH + key).update({ imgUrl: uploadTask.snapshot.downloadURL });
+      }
+    );
+  }
+
+  remove(produtokey: string, removeImg: boolean) {
+    this.db.list(this.PATH).remove(produtokey).then(() => {
+      if (removeImg) {
+        this.removeImg(produtokey);
+      }
+    });
+  }
+
+  private removeImg(produtokey: string) {
+    const storageRef = this.fb.storage().ref();
+    storageRef.child(this.PATH_IMG + produtokey).delete();
+  }
+
+  removeImgOfProduct(produtokey: string) {
+    this.removeImg(produtokey);
+    this.db.object(this.PATH + produtokey).update({ imgUrl: '' });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

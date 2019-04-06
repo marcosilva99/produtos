@@ -75,7 +75,7 @@ categoriaItem:any;
         subscribe.unsubscribe();
         this.categoriaItem = categoriasData;
         console.log(this.categoriaItem);
-        this.formProdutos.controls['categoryName'].setValue(this.categoriaItem.nome);
+        this.formProdutos.controls['categoryName'].setValue(this.categoriaItem.name);
         console.log(this.categoriaItem.name);
       });
     }
