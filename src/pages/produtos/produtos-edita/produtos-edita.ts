@@ -30,14 +30,23 @@ categoriaItem:any;
               private produtosProvider: ProdutosProvider,
               private categoriasProvider: CategoriasProvider) {
 
-              this.produtos = this.navParams.data.produtoKey|| {}
+              this.produtos = this.navParams.data.produtokey|| {}
+
+
 
               this.SetupPageTitle();
               this.createForm();
               //buscar todas as categoria
               this.loadCategorias();
 
-  }
+              const subscribe = this.produtosProvider.get(this.navParams.data.produtokey).subscribe((produtosData: any) => {
+                subscribe.unsubscribe();
+                this.produtos = produtosData
+                console.log(this.produtos);
+                this.createForm();
+  });
+
+}
 
   private SetupPageTitle(){
     if(this.navParams.data.produtokey){
@@ -64,14 +73,14 @@ categoriaItem:any;
     if (this.formProdutos.valid) {
       this.produtosProvider.save(this.formProdutos.value, this.file);
       //this.toast.show('Produtos salvo com sucesso');
-      this.toast.create({ message: 'Categoria salva com sucesso', duration: 3000}).present();
+      this.toast.create({ message: 'Salva com sucesso', duration: 3000}).present();
       this.navCtrl.pop();
     }
   }
 
     // consulta a categoria escolhida pela key e guarda o nome
     getCategorias() {
-      const subscribe = this.categoriasProvider.get(this.formProdutos.value.categoryKey).subscribe((categoriasData: any) => {
+      const subscribe = this.categoriasProvider.get(this.formProdutos.value.categorykey).subscribe((categoriasData: any) => {
         subscribe.unsubscribe();
         this.categoriaItem = categoriasData;
         console.log(this.categoriaItem);

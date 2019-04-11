@@ -12,6 +12,18 @@ export class ProdutosProvider {
   // AngularFireDatabase não dá suporte para o Firebase Storage
   constructor(private fb: FirebaseApp, private db: AngularFireDatabase) {}
 
+
+
+  get(produtoKey:string){
+    return this.db.object(this.PATH + produtoKey)
+    .snapshotChanges()
+    .map(m => {
+      return { key: m.key, ...m.payload.val()};
+
+    });
+
+  }
+
   // consulta todos os produtos, e ordena pelo nome da Categoria
   getAll() {
     return this.db.list(this.PATH, ref => ref.orderByChild('categoryName'))
@@ -73,7 +85,8 @@ export class ProdutosProvider {
     );
   }
 
-  remove(produtokey: string, removeImg: boolean) {
+    remove(produtokey: string, removeImg: boolean) {
+      removeImg=false;
     this.db.list(this.PATH).remove(produtokey).then(() => {
       if (removeImg) {
         this.removeImg(produtokey);

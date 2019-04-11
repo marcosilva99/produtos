@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { ProdutosProvider } from './../../../providers/produtos/produtos';
 
 
@@ -14,6 +14,7 @@ export class ProdutosListaPage {
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
+              public toast: ToastController,
               private produtosProvider: ProdutosProvider){
 
 
@@ -24,6 +25,19 @@ export class ProdutosListaPage {
   newItemProdutos(){ // push é método que chama/abre uma página
                      // o nome da page vc vê na classe da Page
     this.navCtrl.push('ProdutosEditaPage');
+  }
+
+  editItemProdutos(Produto:any){
+    this.navCtrl.push('ProdutosEditaPage', {produtokey: Produto.key});
+  }
+
+  removeItemProdutos(produtokey:string, hasImg: boolean){
+    this.produtosProvider.remove(produtokey, hasImg);
+    this.toast.create({
+      message: "Categoria removida com sucess",
+      duration:3000,
+       position: 'buttom'})
+       .present();
   }
 
 
